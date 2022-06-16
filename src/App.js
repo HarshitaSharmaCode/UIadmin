@@ -1,9 +1,10 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Tabledata from './components/TableItems';
 import EditPage from './components/EditPage';
 import { USERS_PER_PAGE } from './utils/Constants';
 import Pagination from './components/Pagination';
+import axios from 'axios';
 
 
 let editingId;
@@ -13,162 +14,7 @@ let TempItems = [];
 let checkedBoxes = [];
 // let isAllChecked = false;
 
-
-
-let data = [
-  {
-    id: "1",
-    name: "First Miles",
-    email: "aaron@mailinator.com",
-    role: "member"
-  },
-  {
-    id: "2",
-    name: "Aishwarya Naik",
-    email: "aishwarya@mailinator.com",
-    role: "member"
-  },
-  {
-    id: "3",
-    name: "zsgtrvind Kumar",
-    email: "arvind@mailinator.com",
-    role: "admin"
-  },
-  {
-    id: "4",
-    name: "lilaron Miles",
-    email: "baron@mailinator.com",
-    role: "member"
-  },
-  {
-    id: "5",
-    name: "jishwarya Naik",
-    email: "bishwarya@mailinator.com",
-    role: "member"
-  },
-  {
-    id: "6",
-    name: "dhrvind Kumar",
-    email: "brvind@mailinator.com",
-    role: "admin"
-  },
-  {
-    id: "7",
-    name: "Ajaron Miles",
-    email: "naron@mailinator.com",
-    role: "member"
-  },
-  {
-    id: "8",
-    name: "dishwarya Naik",
-    email: "nishwarya@mailinator.com",
-    role: "member"
-  },
-  {
-    id: "9",
-    name: "nrvind Kumar",
-    email: "nrvind@mailinator.com",
-    role: "admin"
-  },
-  {
-    id: "10",
-    name: "saron Miles",
-    email: "maron@mailinator.com",
-    role: "member"
-  },
-  {
-    id: "11",
-    name: "hgishwarya Naik",
-    email: "mishwarya@mailinator.com",
-    role: "member"
-  },
-  {
-    id: "12",
-    name: "frvind Kumar",
-    email: "mrvind@mailinator.com",
-    role: "admin"
-  },
-  {
-    id: "13",
-    name: "yaron Miles",
-    email: "karon@mailinator.com",
-    role: "member"
-  },
-  {
-    id: "14",
-    name: "xishwarya Naik",
-    email: "kishwarya@mailinator.com",
-    role: "member"
-  },
-  {
-    id: "15",
-    name: "zrvind Kumar",
-    email: "krvind@mailinator.com",
-    role: "admin"
-  },
-  {
-    id: "16",
-    name: "dhrvind Kumar",
-    email: "brvind@mailinator.com",
-    role: "admin"
-  },
-  {
-    id: "17",
-    name: "Ajaron Miles",
-    email: "naron@mailinator.com",
-    role: "member"
-  },
-  {
-    id: "18",
-    name: "dishwarya Naik",
-    email: "nishwarya@mailinator.com",
-    role: "member"
-  },
-  {
-    id: "19",
-    name: "nrvind Kumar",
-    email: "nrvind@mailinator.com",
-    role: "admin"
-  },
-  {
-    id: "20",
-    name: "saron Miles",
-    email: "maron@mailinator.com",
-    role: "member"
-  },
-  {
-    id: "21",
-    name: "hgishwarya Naik",
-    email: "mishwarya@mailinator.com",
-    role: "member"
-  },
-  {
-    id: "22",
-    name: "frvind Kumar",
-    email: "mrvind@mailinator.com",
-    role: "admin"
-  },
-  {
-    id: "23",
-    name: "yaron Miles",
-    email: "karon@mailinator.com",
-    role: "member"
-  },
-  {
-    id: "24",
-    name: "xishwarya Naik",
-    email: "kishwarya@mailinator.com",
-    role: "member"
-  },
-  {
-    id: "25",
-    name: "Last Kumar",
-    email: "krvind@mailinator.com",
-    role: "admin"
-  }
-]
-
-TempItems = data;
+const baseURL = "https://geektrust.s3-ap-southeast-1.amazonaws.com/adminui-problem/members.json";
 
 function App() {
 
@@ -177,6 +23,8 @@ function App() {
   const [count, setCount] = useState(0);
   const [editCount, setEditCount] = useState(0);  
   const [searchName, setSearchName] = useState('');
+  const [data, setData] = useState([]);
+
   // const [isCheck, setIsCheck] = useState([]);
 
   // const [isCheckAll, setIsCheckAll] = useState(false);
@@ -185,6 +33,18 @@ function App() {
   const totalPages = Math.ceil(data.length / USERS_PER_PAGE);
   const startIndex = (page - 1) * USERS_PER_PAGE;
   const selectedUsers = data.slice(startIndex, startIndex + USERS_PER_PAGE);
+
+
+
+  useEffect(() => {
+    axios.get(baseURL).then((response) => {
+      setData(response.data);
+      
+      TempItems = response.data
+    });
+  }, []);
+
+
   const leftArrowClickHandler = () =>{
       if((page-1) !== 0){
           setPage(page - 1);
